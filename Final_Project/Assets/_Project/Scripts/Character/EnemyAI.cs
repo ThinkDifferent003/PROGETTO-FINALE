@@ -40,7 +40,7 @@ public class EnemyAI : MonoBehaviour
         _agent.speed = _moveSpeed;
         _agent.updateRotation = false;
 
-        _currentState = State.CHASING;
+        _currentState = State.IDLE;
     }
     private void Update()
     {
@@ -84,11 +84,19 @@ public class EnemyAI : MonoBehaviour
             }
             return;
         }
-        if (_currentState == State.IDLE && distance > _detectionRange)
+        if (_currentState == State.IDLE)
         {
+            if (distance <= _detectionRange)
+            {
+                ChangeState(State.CHASING, 0.5f);
+            }
             return;
         }
-
+        if (distance >  _detectionRange * 1.5f)
+        {
+            ChangeState(State.IDLE, 1.0f);
+            return;
+        }
         if (_decisionTimer > 0) return;
 
         if (_currentState == State.IDLE && distance <= _detectionRange)

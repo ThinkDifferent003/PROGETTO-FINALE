@@ -10,7 +10,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private string _gameSceneName = "Scena1";
     [SerializeField] private IntroManager _introManager;
     [SerializeField] private GameObject _gameManagerPref;
-   
+    public static bool _intro = false;
 
     public void NewGame()
     {
@@ -19,6 +19,9 @@ public class MainMenuManager : MonoBehaviour
         {
             File.Delete(path);
         }
+
+        _intro = true;
+
         if (_introManager  != null)
         {
             _introManager.StartIntro();
@@ -32,6 +35,7 @@ public class MainMenuManager : MonoBehaviour
     }
     public void LoadGame()
     {
+        _intro = false;
         SaveManager.Instance.LoadFromMenu();
         GameObject manager = Instantiate(_gameManagerPref);
         DontDestroyOnLoad(manager);

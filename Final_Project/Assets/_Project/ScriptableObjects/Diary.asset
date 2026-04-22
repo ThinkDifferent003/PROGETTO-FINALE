@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bef9c6da32ae430498a31790b36086fe, type: 3}
-  m_Name: PlayerStats
+  m_Name: Diary
   m_EditorClassIdentifier: 
-  _name: Mark
-  _maxHealth: 50
-  _attack: 10
+  _name: Diary
+  _maxHealth: 0
+  _attack: 0
