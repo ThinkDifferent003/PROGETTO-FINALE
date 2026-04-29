@@ -7,29 +7,35 @@ using UnityEngine.SceneManagement;
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }
+    public SaveData _data;
     private string _savePath;
+    public bool _loadingFromMenu = false;
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(transform.root.gameObject);
+        }
+        else
         {
             Destroy(gameObject);
-            return;
         }
-        Instance = this;
-       
-        _savePath = Path.Combine(Application.persistentDataPath, "savegame.json");
+
+            _savePath = Path.Combine(Application.persistentDataPath, "savegame.json");
     }
-    
+
     public void PerformSave()
     {
-        SaveData data = new SaveData();
-        data._sceneName = SceneManager.GetActiveScene().name;
+        if (_data == null) _data = new SaveData();
+        _data._sceneName = SceneManager.GetActiveScene().name;
+        
         var player = FindObjectOfType<PlayerLife>();
         if (player != null)
         {
-            data._health = player.GetCurrentHealth();
-            data._playerPosition = new float[]
+            _data._health = player.GetCurrentHealth();
+            _data._playerPosition = new float[]
                 {player.transform.position.x,
                  player.transform.position.y,
                  player.transform.position.z};
@@ -40,47 +46,45 @@ public class SaveManager : MonoBehaviour
         {
             if (enemy.IsDead)
             {
-                data._enemyID.Add(enemy.ID);
+                _data._enemyID.Add(enemy.ID);
             }
         }
-        SaveGame(data);
+        SaveGame(_data);
+
     }
 
-    public void PerformLoad()
+    public void PerformLoad(bool usePosition)
     {
-        SaveData data = LoadGame();
-       
-        if (data ==  null) return;
+        _data = LoadGame();
+
+        if (_data == null) return;
+
         var player = FindObjectOfType<PlayerLife>();
         if (player != null)
         {
-            player.transform.position = new Vector3(data._playerPosition[0], data._playerPosition[1], data._playerPosition[2]);
-            player.SetHealth(data._health);
-        }
-        var allEnemies = FindObjectsOfType<EnemyLife>();
-        foreach(var enemy in allEnemies)
-        {
-            if (data._enemyID.Contains(enemy.ID))
+            player.SetHealth(_data._health);
+            if (usePosition)
             {
-                enemy.gameObject.SetActive(false);
+                player.transform.position = new Vector3(_data._playerPosition[0], _data._playerPosition[1], _data._playerPosition[2]);
+
             }
         }
+       
+        var allEnemies = FindObjectsOfType<EnemyLife>(true);
+        foreach (var enemy in allEnemies)
+        {
+             if (_data._enemyID.Contains(enemy.ID)) enemy.gameObject.SetActive(false);            
+        }   
+        
     }
     public void LoadFromMenu()
     {
-        SaveData data = LoadGame();
-        if (data !=  null) 
+        _data = LoadGame();
+        if (_data != null)
         {
-            
-            SceneManager.LoadScene(data._sceneName);
-            StartCoroutine(WaitAndLoad(data));
-            
+            PositionManager.SetNextPosition(PositionManager.SpawnType.SAVE_POINT);
+            SceneManager.LoadScene(_data._sceneName);
         }
-    }
-    private IEnumerator WaitAndLoad(SaveData data)
-    {
-        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == data._sceneName);
-        PerformLoad();
     }
     public void SaveGame(SaveData data)
     {
@@ -90,7 +94,7 @@ public class SaveManager : MonoBehaviour
             File.WriteAllText(_savePath, json);
             Debug.Log($"Gioco salvato in : {_savePath}");
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             Debug.Log($"Errore : {e.Message}");
         }

@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] private GameObject _menuPanel;
+    
 
     private bool _isPaused = false;
 
@@ -50,4 +51,5 @@ public class MenuManager : MonoBehaviour
         SaveManager.Instance.PerformSave();
         SceneManager.LoadScene("MainMenu");
     }
+    
 }

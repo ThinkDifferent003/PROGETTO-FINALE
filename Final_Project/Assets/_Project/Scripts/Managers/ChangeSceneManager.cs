@@ -10,10 +10,11 @@ public class ChangeSceneManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Qualcosa è entrato nel trigger: " + other.name);
         if (other.CompareTag("Player"))
         {
-            PlayerPrefs.SetString("Spawnpoint", _spawnID);
-            SceneManager.LoadScene(_sceneName);
+            Debug.Log("Il Player ha toccato il portale! Chiamo LevelLoader...");
+            LevelLoader.Instance.LoadLevel(_sceneName, _spawnID);
         }
     }
 }

@@ -10,6 +10,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private string _gameSceneName = "Scena1";
     [SerializeField] private IntroManager _introManager;
     [SerializeField] private GameObject _gameManagerPref;
+    [SerializeField] private GameObject _creditPanel;
     public static bool _intro = false;
 
     public void NewGame()
@@ -43,5 +44,13 @@ public class MainMenuManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+    public void OpenCredits()
+    {
+        _creditPanel.SetActive(true);
+    }
+    public void CloseCredits()
+    {
+        _creditPanel.SetActive(false);
     }
 }

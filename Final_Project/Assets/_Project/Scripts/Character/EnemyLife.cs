@@ -7,9 +7,9 @@ public class EnemyLife : LifeManager
     private EnemyAnimation _enemyAnimation;
     private EnemyAI _enemyController;
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         _enemyAnimation = GetComponentInChildren<EnemyAnimation>();
         _enemyController = GetComponent<EnemyAI>();
     }
@@ -44,4 +44,5 @@ public class EnemyLife : LifeManager
             StartCoroutine(_enemyController.Recoil(direction));
         }
     }
+    
 }

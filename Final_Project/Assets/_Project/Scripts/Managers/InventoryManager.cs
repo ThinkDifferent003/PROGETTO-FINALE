@@ -38,7 +38,15 @@ public class InventoryManager : MonoBehaviour
     }
     public void RemoveItem(SO_Item item)
     {
-        _objects[item]--;
+        if (_objects.ContainsKey(item)) 
+        {
+            _objects[item]--;
+            if (_objects[item] <= 0)
+            {
+                _objects.Remove(item);
+            }
+
+        }
         OnInventoryChanged?.Invoke();
     }
     public int GetQuantity(SO_Item item)

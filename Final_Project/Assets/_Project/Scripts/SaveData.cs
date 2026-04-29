@@ -6,6 +6,7 @@ using UnityEngine;
 public class SaveData 
 {
     public string _sceneName;
+    public string _spawnName;
     public float[] _playerPosition = new float[3];
     public int _health;
     public int _mana;
