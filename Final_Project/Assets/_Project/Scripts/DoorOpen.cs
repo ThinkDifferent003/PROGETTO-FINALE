@@ -1,3 +1,4 @@
+using Ink.Parsed;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class DoorOpen : MonoBehaviour
     private bool _isPlayerNearby = false;
     private Quaternion _closeRotation;
     private Quaternion _targetRotation;
+    [SerializeField] private SO_CharacterStats _characterName;
+    [SerializeField] private TextAsset _dialogueNoKey;
+    private bool _isDialoguePlay = false;
 
     private void Start()
     {
@@ -69,7 +73,10 @@ public class DoorOpen : MonoBehaviour
             }
             else
             {
-                Debug.Log("Serve chiave");
+                if (_dialogueNoKey !=  null)
+                {
+                    StartCoroutine(TriggerDialogue(_dialogueNoKey));
+                }
             }
         }
         else
@@ -91,5 +98,11 @@ public class DoorOpen : MonoBehaviour
         {
             _isPlayerNearby = false;
         }
+    }
+    private IEnumerator TriggerDialogue(TextAsset inkFile)
+    {
+        _isDialoguePlay = true;
+        yield return StartCoroutine(DialogueManager.Instance.PlayDialogue(inkFile, _characterName.Name));
+        _isDialoguePlay = false;
     }
 }

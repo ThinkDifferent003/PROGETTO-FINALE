@@ -6,19 +6,28 @@ using UnityEngine.AI;
 
 public class DialogueTrigger : MonoBehaviour
 {
+    [SerializeField] private string _uiniqueID;
     [SerializeField] private TextAsset _inkJson;
     [SerializeField] private SO_CharacterStats _namePG;
     [SerializeField] private bool _onStart = false;
     [SerializeField] private bool _onlyNewGame = false;
     [SerializeField] private bool _isInteractable = false;
     [SerializeField] private bool _isOneShot = true;
-
+    
     [SerializeField] private NavMeshAgent _enemyAgent;
     private bool _hasPlayed = false;
     private bool _playerInRange = false;
 
     private void Start()
     {
+        if (_isOneShot && SaveManager.Instance != null && SaveManager.Instance._data != null)
+        {
+            if (SaveManager.Instance._data._collectedPickups.Contains(_uiniqueID))
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
         if (_onStart)
         {
             if (_onlyNewGame && !MainMenuManager._intro)
@@ -62,6 +71,13 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (_hasPlayed) return;
         _hasPlayed = true;
+        if (_isOneShot && SaveManager.Instance != null && SaveManager.Instance._data != null)
+        {
+            if (!SaveManager.Instance._data._collectedPickups.Contains(_uiniqueID))
+            {
+                SaveManager.Instance._data._collectedPickups.Add(_uiniqueID);
+            }
+        }
         StartCoroutine(RunDialogue());
     }
     private IEnumerator RunDialogue()
