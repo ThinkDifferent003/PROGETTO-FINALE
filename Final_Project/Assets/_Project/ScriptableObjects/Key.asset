@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Key
   _effect: 0
-  _isConsumable: 0
-  _icon: {fileID: 0}
+  _isConsumable: 1
+  _icon: {fileID: 21300000, guid: 1bddd4bcff16c5e4f99ec243bacad1b0, type: 3}

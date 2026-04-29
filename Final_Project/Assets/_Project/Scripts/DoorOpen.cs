@@ -30,8 +30,13 @@ public class DoorOpen : MonoBehaviour
     }
     private bool HasKey()
     {
+        if (!_isRequireKey) return true;
         if (_key == null) return false;
-        return InventoryManager.Instance.Objects.ContainsKey(_key) && InventoryManager.Instance.Objects[_key] > 0;
+        if (InventoryManager.Instance != null)
+        {
+            return InventoryManager.Instance.GetQuantity(_key) > 0;
+        }
+        return false;
     }
     private void Open()
     {
@@ -48,16 +53,23 @@ public class DoorOpen : MonoBehaviour
     }
     private void TryOpen()
     {
-        if (!_isOpen && _isRequireKey)
+        if (_isOpen)
+        {
+            Open();
+            return;
+        }
+        if (_isRequireKey)
         {
             if (HasKey())
             {
-                Debug.Log("Porta aperta");
+                Debug.Log("Apro porta con chiave");
+                InventoryManager.Instance.RemoveItem(_key);
+                _isRequireKey = false;
                 Open();
             }
             else
             {
-                Debug.Log("Porta bloccata");
+                Debug.Log("Serve chiave");
             }
         }
         else

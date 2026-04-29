@@ -10,7 +10,8 @@ public class SaveData
     public float[] _playerPosition = new float[3];
     public int _health;
     public int _mana;
-    public List<string> _inventoryID = new List<string>();
+    public List<InventoryItemSave> _inventoryID = new List<InventoryItemSave>();
+    public List<string> _collectedPickups = new List<string>();
     public List<string> _enemyID = new List<string>();
 
     

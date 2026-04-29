@@ -7,6 +7,7 @@ public class InventoryManager : MonoBehaviour
 {
     private static InventoryManager _instance;
     public static event Action OnInventoryChanged;
+    [SerializeField] private List<SO_Item> _allitems;
 
     private Dictionary<SO_Item , int> _objects = new Dictionary<SO_Item , int>();
     public static InventoryManager Instance => _instance;
@@ -34,11 +35,11 @@ public class InventoryManager : MonoBehaviour
         {
             _objects.Add(item, 1);
         }
-        UpdateUI();
+        OnInventoryChanged?.Invoke();
     }
     public void RemoveItem(SO_Item item)
     {
-        if (_objects.ContainsKey(item)) 
+        if (item != null && _objects.ContainsKey(item)) 
         {
             _objects[item]--;
             if (_objects[item] <= 0)
@@ -51,7 +52,7 @@ public class InventoryManager : MonoBehaviour
     }
     public int GetQuantity(SO_Item item)
     {
-        if (_objects.ContainsKey(item))
+        if (item != null && _objects.ContainsKey(item))
         {
             return _objects[item];
         }
@@ -64,5 +65,22 @@ public class InventoryManager : MonoBehaviour
         {
             slot.Refresh();
         }
+    }
+    public void LoadInventory(List<InventoryItemSave> savedItems)
+    {
+        _objects.Clear();
+        foreach (var itemSave in savedItems)
+        {
+            SO_Item foundItem = _allitems.Find(x => x.name == itemSave._itemName);
+            if (foundItem != null)
+            {
+                _objects.Add(foundItem, itemSave._quantity);
+            }
+            else
+            {
+                Debug.LogError($"Oggetto '{itemSave._itemName}' non trovato nel database dell'InventoryManager!");
+            }
+        }
+        OnInventoryChanged?.Invoke();
     }
 }

@@ -41,6 +41,16 @@ public class SaveManager : MonoBehaviour
                  player.transform.position.z};
 
         }
+        _data._inventoryID.Clear();
+        foreach (var entry in InventoryManager.Instance.Objects)
+        {
+            _data._inventoryID.Add(new InventoryItemSave
+            {
+                _itemName = entry.Key.name,
+                _quantity = entry.Value
+            });
+        }
+        _data._enemyID.Clear();
         var allEnemies = FindObjectsOfType<EnemyLife>();
         foreach (var enemy in allEnemies)
         {
@@ -69,13 +79,9 @@ public class SaveManager : MonoBehaviour
 
             }
         }
-       
-        var allEnemies = FindObjectsOfType<EnemyLife>(true);
-        foreach (var enemy in allEnemies)
-        {
-             if (_data._enemyID.Contains(enemy.ID)) enemy.gameObject.SetActive(false);            
-        }   
-        
+        if (InventoryManager.Instance != null) InventoryManager.Instance.LoadInventory(_data._inventoryID);
+
+        if (GameManager.Instance != null) GameManager.Instance.CleanScene();
     }
     public void LoadFromMenu()
     {

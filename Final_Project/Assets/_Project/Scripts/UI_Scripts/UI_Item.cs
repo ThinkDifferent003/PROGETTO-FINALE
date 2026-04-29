@@ -67,22 +67,19 @@ public class UI_Item : MonoBehaviour
     }
     public void UseItem()
     {
-        if (InventoryManager.Instance == null || _object == null) return;
-        int quantity = InventoryManager.Instance.GetQuantity(_object);
-        if (quantity > 0)
+        if (InventoryManager.Instance.GetQuantity( _object) <= 0) return;
+        if (_object.IsConsumable)
         {
-            PlayerLife playerLife = FindFirstObjectByType<PlayerLife>();
-            if (playerLife != null)
+            PlayerLife player = FindFirstObjectByType<PlayerLife>();
+            if (player != null)
             {
-                playerLife.Heal(_object.Effect);
-
-                if (_object.IsConsumable)
-                {
-                    InventoryManager.Instance.Objects[_object]--;
-                    InventoryManager.Instance.UpdateUI();
-                }
+                player.Heal(_object.Effect);
+                InventoryManager.Instance.RemoveItem(_object);
             }
-            
+            else
+            {
+                Debug.Log("Questa è una chiave, avvicinati alla porta per usarla!");
+            }
         }
     }
 }
