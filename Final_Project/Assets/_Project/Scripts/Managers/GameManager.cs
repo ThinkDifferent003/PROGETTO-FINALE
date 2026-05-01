@@ -8,17 +8,17 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     private void Awake()
     {
+        InizializeSingleton();
+    }
+    private void InizializeSingleton()
+    {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
-        else
-        {
-            Destroy(gameObject);
-        }
-
+        else Destroy(gameObject);    
     }
     private void OnSceneLoaded(Scene scene , LoadSceneMode mode)
     {
@@ -30,18 +30,12 @@ public class GameManager : MonoBehaviour
         PickUp[] allPickups = FindObjectsOfType<PickUp>(true);
         foreach (PickUp pickup in allPickups)
         {
-            if (SaveManager.Instance._data._collectedPickups.Contains(pickup.UniqueID()))
-            {
-                Destroy(pickup.gameObject);
-            }
+            if (SaveManager.Instance._data._collectedPickups.Contains(pickup.UniqueID())) Destroy(pickup.gameObject);       
         }
         EnemyLife[] allEnemies = FindObjectsOfType<EnemyLife>(true);
         foreach (EnemyLife enemy in allEnemies)
         {
-            if (SaveManager.Instance._data._enemyID.Contains(enemy.ID))
-            {
-                enemy.gameObject.SetActive(false);
-            }
+            if (SaveManager.Instance._data._enemyID.Contains(enemy.ID)) enemy.gameObject.SetActive(false);    
         }
     }
     private void OnDestroy()

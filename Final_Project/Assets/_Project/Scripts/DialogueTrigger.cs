@@ -7,16 +7,23 @@ using UnityEngine.Events;
 
 public class DialogueTrigger : MonoBehaviour
 {
+    [Header("ID & Save")]
     [SerializeField] private string _uiniqueID;
+    [SerializeField] private bool _isOneShot = true;
+    [SerializeField] private bool _onlyNewGame = false;
+
+    [Header("Dialogue")]
     [SerializeField] private TextAsset _inkJson;
     [SerializeField] private SO_CharacterStats _namePG;
+
+    [Header("Trigger Settings")]
     [SerializeField] private bool _onStart = false;
-    [SerializeField] private bool _onlyNewGame = false;
     [SerializeField] private bool _isInteractable = false;
-    [SerializeField] private bool _isOneShot = true;
-    
+
+    [Header("External Links")]
     [SerializeField] private NavMeshAgent _enemyAgent;
     [SerializeField] private UnityEvent _onDialogueEnd;
+
     private bool _hasPlayed = false;
     private bool _playerInRange = false;
 
@@ -32,23 +39,16 @@ public class DialogueTrigger : MonoBehaviour
         }
         if (_onStart)
         {
-            if (_onlyNewGame && !MainMenuManager._intro)
-            {
-                return;
-            }
+            if (_onlyNewGame && !MainMenuManager._intro) return; 
             Execute();
             if (_onlyNewGame) MainMenuManager._intro = false;
-        }
-        
+        }  
     }
     private void Update()
     {
         if (_isInteractable && _playerInRange && !_hasPlayed)
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Execute();
-            }
+            if (Input.GetKeyDown(KeyCode.E)) Execute();    
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -56,18 +56,12 @@ public class DialogueTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             _playerInRange = true;
-            if (!_isInteractable && !_onStart && !_hasPlayed)
-            {
-                Execute();
-            }
+            if (!_isInteractable && !_onStart && !_hasPlayed) Execute();      
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            _playerInRange = false;
-        }
+        if (other.CompareTag("Player")) _playerInRange = false;    
     }
     public void Execute()
     {
@@ -75,10 +69,7 @@ public class DialogueTrigger : MonoBehaviour
         _hasPlayed = true;
         if (_isOneShot && SaveManager.Instance != null && SaveManager.Instance._data != null)
         {
-            if (!SaveManager.Instance._data._collectedPickups.Contains(_uiniqueID))
-            {
-                SaveManager.Instance._data._collectedPickups.Add(_uiniqueID);
-            }
+            if (!SaveManager.Instance._data._collectedPickups.Contains(_uiniqueID)) SaveManager.Instance._data._collectedPickups.Add(_uiniqueID);     
         }
         StartCoroutine(RunDialogue());
     }
@@ -101,9 +92,6 @@ public class DialogueTrigger : MonoBehaviour
             if (_enemyAgent != null) _enemyAgent.isStopped = false;
             if (ai != null) ai.enabled = true;
         }
-        
-        
-
         if (_isOneShot)
         {
             if (_onDialogueEnd.GetPersistentEventCount() == 0) Destroy(gameObject);
@@ -114,10 +102,6 @@ public class DialogueTrigger : MonoBehaviour
                 if (col != null) col.enabled = false;
             }
         }
-        else
-        {
-            _hasPlayed = false;
-        }
-        
+        else _hasPlayed = false;   
     }
 }

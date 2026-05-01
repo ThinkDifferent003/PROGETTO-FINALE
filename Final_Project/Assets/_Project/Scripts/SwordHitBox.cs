@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class SwordHitBox : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private SO_CharacterStats _stats;
-    
+
+    private bool _colliderEnabled = false;
     private List<IDamageable> _alreadyHit = new List<IDamageable>();
     public GameObject Owner => transform.root.gameObject;
-    private bool _colliderEnabled = false;
-
     private void Update()
     {
         Collider col = GetComponent<Collider>();
-        if (!_colliderEnabled && col.enabled)
-        {
-            ResetHitbox();
-        }
+        if (!_colliderEnabled && col.enabled) ResetHitbox(); 
         _colliderEnabled = col.enabled;
     }
     public void ResetHitbox()
@@ -36,8 +33,7 @@ public class SwordHitBox : MonoBehaviour
                 ClashManager.Instance.TriggerClash(transform.position);
                 return;
             }
-        }
-            
+        }   
         IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null && !_alreadyHit.Contains(damageable))
         {

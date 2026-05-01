@@ -7,11 +7,16 @@ using UnityEngine.SceneManagement;
 
 public class IntroManager : MonoBehaviour
 {
+    [Header("UI References")]
     [SerializeField] private GameObject _blackPanel;
     [SerializeField] private TextMeshProUGUI _text;
+    [SerializeField] private Animator _animator;
+
+    [Header("Intro Settings")]
     [SerializeField] private string[] _storyLines;
     [SerializeField] private float _typingSpeed = 0.1f;
-    [SerializeField] private Animator _animator;
+
+    [Header("Transiction Settings")]
     [SerializeField] private GameObject _gameManagerPref;
     [SerializeField] private string _sceneToLoad = "Level1";
 
@@ -35,19 +40,16 @@ public class IntroManager : MonoBehaviour
         {
             if (_isTyping)
             {
-                StopAllCoroutines();
+                 StopAllCoroutines();
                 _text.text = _storyLines[_typingCount];
                 _isTyping = false;
             }
-            else
-            {
-                NextSentence();
-            }
+            else NextSentence();
         }
     }
     private IEnumerator StartIntroRoutine()
     {
-        _animator.SetTrigger("FadeIn");
+        if (_animator != null) _animator.SetTrigger("FadeIn");
         yield return new WaitForSeconds(1f);
         StartCoroutine(TypeSentence(_storyLines[0]));
     }
@@ -67,17 +69,12 @@ public class IntroManager : MonoBehaviour
     private void NextSentence()
     {
         _typingCount++;
-        if (_typingCount < _storyLines.Length)
-        {
-            StartCoroutine(TypeSentence(_storyLines[_typingCount]));
-        }
-        else
-        {
-            StartCoroutine(EndIntro());
-        }
+        if (_typingCount < _storyLines.Length) StartCoroutine(TypeSentence(_storyLines[_typingCount])); 
+        else StartCoroutine(EndIntro());
     }
     private IEnumerator EndIntro()
     {
+        _isIntroActive = false;
         _text.text = "";
         
         yield return new WaitForSeconds(1f);
@@ -86,7 +83,6 @@ public class IntroManager : MonoBehaviour
         {
             GameObject manager = Instantiate(_gameManagerPref);
             DontDestroyOnLoad(manager);
-        }
-        
+        } 
     }
 }

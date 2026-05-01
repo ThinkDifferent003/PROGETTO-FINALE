@@ -5,9 +5,11 @@ using UnityEngine.AI;
 
 public class NPC_Exit : MonoBehaviour
 {
+    [Header("Agent Controller")]
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private Transform _exitPoint;
     [SerializeField] private float _stoppingDistance = 0.5f;
+
     private EnemyAnimation _anim;
 
     private void Awake()

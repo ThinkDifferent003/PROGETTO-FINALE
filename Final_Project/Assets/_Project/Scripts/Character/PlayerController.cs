@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = 5f; //Velocità
-    [SerializeField] private float _forceRecoil = 0.5f; //Forza della spinta durante il rinculo
-    [SerializeField] private float _durationRecoil = 0.2f; //Durata del blocco
-    [SerializeField] private float _timerRecoil = 0f; //Contatore della durata del rinculo
+    [Header("Movement Settings")]
+    [SerializeField] private float _moveSpeed = 5f; 
+
+    [Header("Recoil Settings")]
+    [SerializeField] private float _forceRecoil = 0.5f;
+    [SerializeField] private float _durationRecoil = 0.2f; 
+    [SerializeField] private float _timerRecoil = 0f; 
     
     private PlayerAnimation _playerAnimation;
     private Rigidbody _rb;
+
     private Vector3 _input;
-    private Vector3 _lastMoveDirection = Vector3.back; // Direzione di "sguardo"
-    private bool _isRecoiling = false; // Se il player sta subendo il colpo
+    private Vector3 _lastMoveDirection = Vector3.back; 
+    private bool _isRecoiling = false;
    
     private void Start()
     {
@@ -23,54 +27,63 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if (_isRecoiling) return; // Se il player è in rinculo, esci dall'Update
-
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical");
-
-        _input = new Vector3(moveX, 0, moveZ).normalized; //Normalizzo per la diagonale
-       
-        //Se esiste lo script dell'animazione, passo i valori
-        if (_playerAnimation != null ) _playerAnimation.AnimationMovement(_input.x,_input.z);
-       
-        //Se il player si sta muovendo salvo la direzione come ultima
-        if (_input.sqrMagnitude > 0 ) _lastMoveDirection = _input;
-       
-        //Se premo il tasto sinistro del mouse
-        if (Input.GetMouseButtonDown(0))
-        {   //Faccio partire l'animazione di attacco
-            if (_playerAnimation != null) _playerAnimation.AnimationAttack();
-        }
+        if (_isRecoiling) return; 
+        InputMove();
+        UpdateAnimation();
+        InputAttack();    
      }
     private void FixedUpdate()
     {   
-        if (_isRecoiling) return; //Se sta subendo rinculo , esco
+        if (_isRecoiling) return; 
+        MovePlayer();
         
-        //Calcolo lo spostamento fisico:(      Direzione    )    (velocità)  (Tempo fisso di Unity)
-        Vector3 movement = new Vector3 (_input.x,0, _input.z) * _moveSpeed * Time.fixedDeltaTime;
-        
-        //Muovo il rigidbody
-        _rb.MovePosition(_rb.position +  movement);
     }
+    #region Input Logic
+    private void InputMove()
+    {
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveZ = Input.GetAxisRaw("Vertical");
+        _input = new Vector3(moveX, 0, moveZ).normalized; //Normalizzo per la diagonale
+        if (_input.sqrMagnitude > 0) _lastMoveDirection = _input;
+    }
+    private void InputAttack()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {   
+            if (_playerAnimation != null) _playerAnimation.AnimationAttack();
+        }
+    }
+    #endregion
+    #region Movement Logic
+    private void MovePlayer()
+    {
+        Vector3 movement = new Vector3(_input.x, 0, _input.z) * _moveSpeed * Time.fixedDeltaTime;
+        _rb.MovePosition(_rb.position + movement);
+    }
+
+    private void UpdateAnimation()
+    {
+        if (_playerAnimation != null) _playerAnimation.AnimationMovement(_input.x, _input.z);
+    }
+    #endregion
+    #region Public methods
     public IEnumerator Recoil(Vector3 direction)
     {
-        _isRecoiling = true; // Blocco i controlli del player
-        _timerRecoil = 0f; //Reset del timer
-        
-        //Ciclo finchè il tempo trascorso è minore della durata impostata
+        _isRecoiling = true; 
+        _timerRecoil = 0f; 
         while (_timerRecoil < _durationRecoil)
         {    
-            //Sposto il player nella direzione passata come argomento
             _rb.MovePosition(_rb.position + direction * _forceRecoil * Time.deltaTime);
-            _timerRecoil += Time.deltaTime; //Incremento il timer
-            yield return null; //Aspetto il frame successivo
+            _timerRecoil += Time.deltaTime; 
+            yield return null;
         }
-        _isRecoiling = false; //Sblocca i controlli del player
+        _isRecoiling = false; 
         
     }
     public Vector3 GetLastDirection()
     {
         return _lastMoveDirection;
     }
-   
+    #endregion
+
 }

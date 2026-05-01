@@ -6,8 +6,10 @@ using UnityEngine.UIElements;
 
 public class PickUp : MonoBehaviour
 {
+    [Header("Item Data")]
     [SerializeField] private SO_Item _itemData;
     [SerializeField] private string _uniqueID;
+
     private bool _isPlayerNearby = false;
 
     public string UniqueID() {  return _uniqueID; }
@@ -15,18 +17,12 @@ public class PickUp : MonoBehaviour
     {
         if (SaveManager.Instance != null && SaveManager.Instance._data != null)
         {
-            if (SaveManager.Instance._data._collectedPickups.Contains(_uniqueID))
-            {
-                Destroy(gameObject);
-            }
+            if (SaveManager.Instance._data._collectedPickups.Contains(_uniqueID)) Destroy(gameObject);     
         }
     }
     private void Update()
     {
-        if (_isPlayerNearby && Input.GetKeyDown(KeyCode.E))
-        {
-            PickUpItem();
-        }
+        if (_isPlayerNearby && Input.GetKeyDown(KeyCode.E)) PickUpItem();    
     }
     private void PickUpItem()
     {
@@ -35,10 +31,7 @@ public class PickUp : MonoBehaviour
             InventoryManager.Instance.AddItem(_itemData);
             if (SaveManager.Instance != null && SaveManager.Instance._data != null)
             {
-                if (!SaveManager.Instance._data._collectedPickups.Contains(_uniqueID))
-                {
-                    SaveManager.Instance._data._collectedPickups.Add(_uniqueID);
-                }
+                if (!SaveManager.Instance._data._collectedPickups.Contains(_uniqueID)) SaveManager.Instance._data._collectedPickups.Add(_uniqueID);   
             }
             Destroy(gameObject);
         }
@@ -46,16 +39,10 @@ public class PickUp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            _isPlayerNearby = true;
-        }
+        if (other.CompareTag("Player")) _isPlayerNearby = true;  
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            _isPlayerNearby = false;
-        }
+        if (other.CompareTag("Player")) _isPlayerNearby = false;    
     }
 }

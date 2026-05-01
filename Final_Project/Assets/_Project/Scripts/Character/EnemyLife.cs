@@ -15,37 +15,23 @@ public class EnemyLife : LifeManager
         _enemyController = GetComponent<EnemyAI>();
         _lootDrop = GetComponent<LootDrop>();
     }
+    #region Life
     public override void TakeDamage(int damage,Vector3 attacker)
     {
         if (IsDead) return;
         base.TakeDamage(damage, attacker);
-        if (!IsDead)
-        {
-            _enemyAnimation.AnimationHurt();
-        }
+        if (!IsDead && _enemyAnimation != null) _enemyAnimation.AnimationHurt();     
     }
     protected override void Die()
-    {
-        EnemyAI enemyAI = GetComponent<EnemyAI>();
-        if (enemyAI != null) 
-        {
-            enemyAI.enabled = false;
-        }
+    {   
+        if (_enemyController!= null) _enemyController.enabled = false;    
         if (_lootDrop != null) _lootDrop.DropItem();
-
-        if (_enemyAnimation != null)
-        {
-            _enemyAnimation.AnimationDie();
-            //Destroy(gameObject, 2f);
-        }
+        if (_enemyAnimation != null) _enemyAnimation.AnimationDie();     
     }
     protected override void ApplyRecoil(Vector3 direction)
     {
         if (IsDead) return;
-        if (_enemyController != null) 
-        {
-            StartCoroutine(_enemyController.Recoil(direction));
-        }
+        if (_enemyController != null) StartCoroutine(_enemyController.Recoil(direction));
     }
-    
+    #endregion
 }

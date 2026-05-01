@@ -412,12 +412,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiniqueID: Dialogo_Cavaliere
+  _isOneShot: 1
+  _onlyNewGame: 0
   _inkJson: {fileID: 4900000, guid: 179ff735ccf04fa45835ad482cb84c8e, type: 3}
   _namePG: {fileID: 11400000, guid: e5362daa83334cd41b19fae6a9d0b8f8, type: 2}
   _onStart: 0
-  _onlyNewGame: 0
   _isInteractable: 0
-  _isOneShot: 1
   _enemyAgent: {fileID: 1447262885}
   _onDialogueEnd:
     m_PersistentCalls:
@@ -2554,13 +2554,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd97548c9f625eb4781c3539a19682f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiniqueID: 
+  _uiniqueID: Dialogo_Diana
+  _isOneShot: 1
+  _onlyNewGame: 0
   _inkJson: {fileID: 4900000, guid: 7cd345c5378eedf458a070acd8167df5, type: 3}
   _namePG: {fileID: 11400000, guid: 88bccf50a7de041448ca26256ecc4578, type: 2}
   _onStart: 0
-  _onlyNewGame: 0
   _isInteractable: 0
-  _isOneShot: 1
   _enemyAgent: {fileID: 0}
   _onDialogueEnd:
     m_PersistentCalls:
@@ -5351,13 +5351,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd97548c9f625eb4781c3539a19682f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiniqueID: 
+  _uiniqueID: Dialogo_Guardia
+  _isOneShot: 1
+  _onlyNewGame: 0
   _inkJson: {fileID: 4900000, guid: 9d2883a1770cf1a41b2a5723a04f2bba, type: 3}
   _namePG: {fileID: 11400000, guid: 382969da86bf7004f80447778c53841e, type: 2}
   _onStart: 0
-  _onlyNewGame: 0
   _isInteractable: 0
-  _isOneShot: 1
   _enemyAgent: {fileID: 1242650309}
   _onDialogueEnd:
     m_PersistentCalls:

@@ -9,10 +9,13 @@ public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance {  get; private set; }
 
+    [Header("UI References")]
     [SerializeField] private GameObject _dialoguePanel;
     [SerializeField] private TextMeshProUGUI _dialogueText;
     [SerializeField] private GameObject _namePanel;
     [SerializeField] private TextMeshProUGUI _nameText;
+
+    [Header("Settings")]
     [SerializeField] private float _waitForSeconds = 1f;
     [SerializeField] private float _typingSpeed = 0.05f;
 
@@ -23,6 +26,7 @@ public class DialogueManager : MonoBehaviour
     }
     public IEnumerator PlayDialogue(TextAsset inkJson, string namePG)
     {
+        if (inkJson == null) yield break;
         Story story = new Story(inkJson.text);
         _nameText.text = namePG;
         _namePanel.SetActive(true);

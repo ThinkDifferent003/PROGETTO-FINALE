@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    [Header("Animation Parameter Names")]
     [SerializeField] private string _moveX = "MoveX";
     [SerializeField] private string _moveZ = "MoveZ";
     [SerializeField] private string _isMoving = "IsMoving";
@@ -13,16 +14,34 @@ public class PlayerAnimation : MonoBehaviour
      
     private Animator _animator;
 
-    private void Start()
+    private int _hashMoveX;
+    private int _hashMoveZ;
+    private int _hasMoving;
+    private int _hashAttack;
+    private int _hashDeath;
+    private int _hashHurt;
+
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
+        InizializeHashes();
         
     }
+    private void InizializeHashes()
+    {
+        _hashMoveX = Animator.StringToHash(_moveX);
+        _hashMoveZ = Animator.StringToHash(_moveZ);
+        _hasMoving = Animator.StringToHash(_isMoving);
+        _hashAttack = Animator.StringToHash(_attack);
+        _hashDeath = Animator.StringToHash(_isDeath);
+        _hashHurt = Animator.StringToHash(_isHurt);
+    }
+    #region Animation Calls
     public void AnimationMovement(float x , float z)
     {
         if (_animator == null) return; //Se non c'è animator esco
         bool moving = (x != 0 || z != 0); //Se X o Z sono diversi da 0, il player si sta muovendo
-        _animator.SetBool(_isMoving, moving); //Dico all'animator se attivare lo stato di movimento
+        _animator.SetBool(_hasMoving, moving); //Dico all'animator se attivare lo stato di movimento
         //Se si muove , aggiorno i valori degli assi
         if (moving)
         {
@@ -32,22 +51,15 @@ public class PlayerAnimation : MonoBehaviour
     }
     public void AnimationAttack()
     {
-        if ( _animator == null) return;
-        _animator.SetTrigger(_attack); //Attivo il trigger dell' attacco
+        if ( _animator != null ) _animator.SetTrigger(_hashAttack); //Attivo il trigger dell' attacco
     }
     public void AnimationDie()
     {
-        if (_animator != null)
-        {
-            _animator.SetTrigger(_isDeath);//Attivo il trigger della morte
-        }
+        if (_animator != null) _animator.SetTrigger(_hashDeath);//Attivo il trigger della morte     
     }
     public void AnimationHurt()
     {
-        if (_animator != null)
-        {
-            _animator.SetTrigger(_isHurt);//Attiva il trigger di stordimento
-        }
-        
+        if (_animator != null) _animator.SetTrigger(_hashHurt);//Attiva il trigger di stordimento     
     }
+    #endregion
 }

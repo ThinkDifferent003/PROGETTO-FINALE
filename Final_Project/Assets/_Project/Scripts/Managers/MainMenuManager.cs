@@ -8,11 +8,17 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [Header("Scene Settings")]
     [SerializeField] private string _gameSceneName = "Scena1";
-    [SerializeField] private IntroManager _introManager;
     [SerializeField] private GameObject _gameManagerPref;
+
+    [Header("Intro Settings")]
+    [SerializeField] private IntroManager _introManager;
+
+    [Header("Intro Panels")]
     [SerializeField] private GameObject _creditPanel;
     [SerializeField] private Button _loadButton;
+
     public static bool _intro = false;
 
     private void Start()
@@ -31,17 +37,9 @@ public class MainMenuManager : MonoBehaviour
     public void NewGame()
     {
         string path = System.IO.Path.Combine(Application.persistentDataPath, "savegame.json");
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
-
+        if (File.Exists(path)) File.Delete(path);
         _intro = true;
-
-        if (_introManager  != null)
-        {
-            _introManager.StartIntro();
-        }
+        if (_introManager  != null) _introManager.StartIntro();
         else
         {
             Instantiate(_gameManagerPref);
@@ -52,9 +50,12 @@ public class MainMenuManager : MonoBehaviour
     public void LoadGame()
     {
         _intro = false;
-        SaveManager.Instance.LoadFromMenu();
-        GameObject manager = Instantiate(_gameManagerPref);
-        DontDestroyOnLoad(manager);
+        if (SaveManager.Instance != null) SaveManager.Instance.LoadFromMenu();
+        if (_gameManagerPref  != null)
+        {
+            GameObject manager = Instantiate(_gameManagerPref);
+            DontDestroyOnLoad(manager);
+        }    
     }
     public void QuitGame()
     {

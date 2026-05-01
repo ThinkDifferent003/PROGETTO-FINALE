@@ -5,16 +5,15 @@ using UnityEngine;
 
 public class Letter : MonoBehaviour
 {
+    [Header("UI References")]
     [SerializeField] private GameObject _letterPanel;
     [SerializeField] private TextMeshProUGUI _textLetter;
+
     private bool _isPlayerRange;
 
     private void Update()
     {
-        if (_isPlayerRange && Input.GetKeyDown(KeyCode.E))
-        {
-            OpenLetter();
-        }
+        if (_isPlayerRange && Input.GetKeyDown(KeyCode.E)) OpenLetter();
     }
     private void OpenLetter()
     {
@@ -32,16 +31,10 @@ public class Letter : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
-        {
-            _isPlayerRange = true;
-        }
+        if(other.CompareTag("Player")) _isPlayerRange = true;
     }
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("Player"))
-        {
-            _isPlayerRange = false;
-        }
+        if(other.CompareTag("Player")) _isPlayerRange = false;  
     }
 }

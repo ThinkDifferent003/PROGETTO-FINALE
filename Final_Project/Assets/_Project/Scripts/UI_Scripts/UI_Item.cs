@@ -6,27 +6,21 @@ using UnityEngine.UI;
 
 public class UI_Item : MonoBehaviour
 {
+    [Header("Item Configuration")]
     [SerializeField] private SO_Item _object;
-    [SerializeField] private Image _imageIcon;
     [SerializeField] private KeyCode _keyCode;
+
+    [Header("UI References")]
+    [SerializeField] private Image _imageIcon;  
     [SerializeField] private GameObject _iconObject;
     [SerializeField] private TMP_Text _quantityText;
     [SerializeField] private TMP_Text _keyUseItem;
 
     private void Awake()
     {
-        if (_iconObject  != null)
-        {
-            _imageIcon = _iconObject.GetComponent<Image>();
-        }
-        if (_object != null && _imageIcon != null)
-        {
-            _imageIcon.sprite = _object.Icon;
-        }
-        if (_keyUseItem != null)
-        {
-            _keyUseItem.text = _keyCode.ToString();
-        }
+        if (_iconObject  != null) _imageIcon = _iconObject.GetComponent<Image>();
+        if (_object != null && _imageIcon != null) _imageIcon.sprite = _object.Icon;
+        if (_keyUseItem != null) _keyUseItem.text = _keyCode.ToString();
     }
     private void Start()
     {
@@ -34,10 +28,7 @@ public class UI_Item : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(_keyCode))
-        {
-            UseItem();
-        }
+        if (Input.GetKeyDown(_keyCode)) UseItem();
     }
     private void OnEnable()
     {
@@ -51,14 +42,8 @@ public class UI_Item : MonoBehaviour
     {
         if (InventoryManager.Instance ==  null || _object == null) return; 
         int quantity = InventoryManager.Instance.GetQuantity(_object);
-        if (quantity > 0) 
-        {
-            _iconObject.SetActive(true);
-        }
-        else
-        {
-            _iconObject.SetActive(false);
-        }
+        if (quantity > 0) _iconObject.SetActive(true);
+        else _iconObject.SetActive(false);
         if (_quantityText != null)
         {
             _quantityText.text = quantity.ToString();
@@ -75,10 +60,6 @@ public class UI_Item : MonoBehaviour
             {
                 player.Heal(_object.Effect);
                 InventoryManager.Instance.RemoveItem(_object);
-            }
-            else
-            {
-                Debug.Log("Questa è una chiave, avvicinati alla porta per usarla!");
             }
         }
     }

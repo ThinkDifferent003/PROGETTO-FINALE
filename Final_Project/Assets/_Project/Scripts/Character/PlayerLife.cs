@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class PlayerLife : LifeManager
 {
-    private PlayerAnimation _playerAnimation;
-    private PlayerController _playerController;
-    public static event Action<int, int> OnHealthChanged;
+    [Header("UI Reference")]
     [SerializeField] GameObject _gameOverPanel;
 
+    private PlayerAnimation _playerAnimation;
+    private PlayerController _playerController;
+
+    public static event Action<int, int> OnHealthChanged;
+ 
     protected override void Awake()
     {
         base.Awake();
@@ -18,18 +21,30 @@ public class PlayerLife : LifeManager
         if (_gameOverPanel != null ) _gameOverPanel.SetActive(false);
         UpdateUI();
     }
+    #region Life
+    public override void TakeDamage(int damage, Vector3 attacker)
+    {
+        if (IsDead) return;
+        base.TakeDamage(damage,attacker);
+        //Se dopo il colpo è ancora vivo
+        if (!IsDead && _playerAnimation != null) _playerAnimation.AnimationHurt(); //Avvio animazione di urto      
+        UpdateUI(); //Aggiorna la vita
+    }
     public override void SetHealth(int amount)
     {
         base.SetHealth(amount);
         UpdateUI();
     }
-    private void UpdateUI()
-    { 
-        OnHealthChanged?.Invoke(_currentHealth, GetMaxHealth());
-    }
-    public void UpdateUIExternally()
+   
+    public void Heal(int heal)
     {
-        UpdateUI();
+        _currentHealth += heal; //Aggiunge vita
+        _currentHealth = Mathf.Clamp(_currentHealth,0,GetMaxHealth()); //Mi assicuro che gli HP non superino la vita max
+        UpdateUI(); //Aggiorno UI
+    }
+    protected override void ApplyRecoil(Vector3 direction)
+    {
+        if (_playerController != null && !IsDead) StartCoroutine(_playerController.Recoil(direction)); //Parte la coroutine    
     }
     protected override void Die()
     {
@@ -37,30 +52,8 @@ public class PlayerLife : LifeManager
         if (_playerAnimation != null) _playerAnimation.AnimationDie();
         StartCoroutine(ShowGameOverPanel());
     }
-    public override void TakeDamage(int damage, Vector3 attacker)
-    {
-        if (IsDead) return;
-        base.TakeDamage(damage,attacker);
-        //Se dopo il colpo è ancora vivo
-        if (!IsDead)
-        {
-            _playerAnimation.AnimationHurt(); //Avvio animazione di urto
-        }
-        UpdateUI(); //Aggiorna la vita
-    }
-    protected override void ApplyRecoil(Vector3 direction)
-    {
-        if (_playerController != null && !IsDead) //Se il player esiste e non è morto
-        {
-            StartCoroutine(_playerController.Recoil(direction)); //Parte la coroutine
-        }
-    }
-    public void Heal(int heal)
-    {
-        _currentHealth += heal; //Aggiunge vita
-        _currentHealth = Mathf.Clamp(_currentHealth,0,GetMaxHealth()); //Mi assicuro che gli HP non superino la vita max
-        UpdateUI(); //Aggiorno UI
-    }
+    #endregion
+    #region Events & UI
     private IEnumerator ShowGameOverPanel()
     {
         yield return new WaitForSeconds(1.5f);
@@ -68,7 +61,14 @@ public class PlayerLife : LifeManager
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }   
+    private void UpdateUI()
+    { 
+        OnHealthChanged?.Invoke(_currentHealth, GetMaxHealth());
     }
+    public void UpdateUIExternally() => UpdateUI();
+    #endregion
+    #region Reset Logic
     public void Reset()
     {
         if (_playerController != null) _playerController.enabled = true;
@@ -84,4 +84,5 @@ public class PlayerLife : LifeManager
         }
         UpdateUI();
     }
+    #endregion
 }

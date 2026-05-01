@@ -5,29 +5,19 @@ using UnityEngine;
 
 public class ClashManager : MonoBehaviour
 {
-    public static ClashManager Instance;
+    public static ClashManager Instance { get; private set; }
 
+    [Header("Time Settings")]
     [SerializeField] private float _slowMotion = 0.1f;
     [SerializeField] private float _duration = 0.2f;
-    //[SerializeField] private GameObject _clashEffect;
 
     private void Awake()
     {
-        Instance = this;
-    }
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.K))
-    //    {
-    //        TriggerClash(Vector3.up * 2);
-    //    }
-    //}
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    } 
     private IEnumerator ClashRoutine(Vector3 position)
     {
-        //if (_clashEffect  != null)
-        //{
-        //    Instantiate(_clashEffect,position,Quaternion.identity);
-        //}
         Time.timeScale = _slowMotion;
         yield return new WaitForSecondsRealtime(_duration);
         Time.timeScale = 1f;

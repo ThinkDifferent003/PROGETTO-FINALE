@@ -5,7 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Stat", menuName = "CharacterStats")]
 public class SO_CharacterStats : ScriptableObject
 {
+    [Header("General Info")]
     [SerializeField] private string _name;
+
+    [Header("Base Stats")]
     [SerializeField] private int _maxHealth;
     [SerializeField] private int _attack;
 

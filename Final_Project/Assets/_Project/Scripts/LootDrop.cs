@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LootDrop : MonoBehaviour
 {
+    [Header("Setting")]
     [SerializeField] private GameObject _dropPref;
     [SerializeField] private Transform _dropPoint;
 

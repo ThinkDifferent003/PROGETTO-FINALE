@@ -5,14 +5,13 @@ using UnityEngine;
 public static class PositionManager
 {
     public enum SpawnType { DEFAULT, PORTAL, SAVE_POINT}
+
     private const string MODE_KEY = "NextSpawnMode";
     private const string DETAIL_KEY = "NextSpawnDetail";
     public static void SetNextPosition(SpawnType type, string detail = "")
     {
         PlayerPrefs.SetInt(MODE_KEY, (int)type);
-
         PlayerPrefs.SetString(DETAIL_KEY, detail);
-
         PlayerPrefs.Save();
     }
     public static SpawnType GetCurrentType()
@@ -28,5 +27,6 @@ public static class PositionManager
     {
         PlayerPrefs.DeleteKey(MODE_KEY);
         PlayerPrefs.DeleteKey(DETAIL_KEY);
+        PlayerPrefs.Save();
     }
 }

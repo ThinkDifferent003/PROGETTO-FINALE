@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyAnimation : MonoBehaviour
 {
-    private Animator _animator;
+    [Header("Animation Parameter Names")]
     [SerializeField] private string _moveX = "MoveX";
     [SerializeField] private string _moveZ = "MoveZ";
     [SerializeField] private string _isMoving = "IsMoving";
@@ -12,35 +12,47 @@ public class EnemyAnimation : MonoBehaviour
     [SerializeField] private string _die = "Die";
     [SerializeField] private string _isHurt = "IsHurt";
 
+    private Animator _animator;
 
-    private void Start()
+    private int _hashMoveX;
+    private int _hashMoveZ;
+    private int _hashMoving;
+    private int _hashAttack;
+    private int _hashDie;
+    private int _hashHurt;
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
+        InizializeHashes();
     }
+    private void InizializeHashes()
+    {
+        _hashMoveX = Animator.StringToHash(_moveX);
+        _hashMoveZ = Animator.StringToHash(_moveZ);
+        _hashMoving = Animator.StringToHash(_isMoving);
+        _hashAttack = Animator.StringToHash(_attack);
+        _hashDie = Animator.StringToHash(_die);
+        _hashHurt = Animator.StringToHash(_isHurt);
+    }
+    #region Animation Calls
     public void SetMoves(float x, float z, bool moving)
     {
         if (_animator == null) return;
-        _animator.SetFloat(_moveX,x);
-        _animator.SetFloat(_moveZ,z);
-        _animator.SetBool(_isMoving,moving);
+        _animator.SetFloat(_hashMoveX,x);
+        _animator.SetFloat(_hashMoveZ,z);
+        _animator.SetBool(_hashMoving,moving);
     }
     public void AnimationDie()
     {
-        if (_animator != null)
-        {
-            _animator.SetTrigger(_die);
-        }
+        if (_animator != null) _animator.SetTrigger(_die);      
     }
     public void AnimationAttack()
     {
-        if (_animator == null) return;
-        _animator.SetTrigger(_attack);
+        if (_animator != null) _animator.SetTrigger(_attack);
     }
     public void AnimationHurt()
     {
-        if (_animator != null)
-        {
-            _animator.SetTrigger(_isHurt);
-        }
+        if (_animator != null) _animator.SetTrigger(_isHurt);
     }
+    #endregion
 }

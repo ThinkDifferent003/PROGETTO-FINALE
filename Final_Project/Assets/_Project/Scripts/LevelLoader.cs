@@ -5,34 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-    public static LevelLoader Instance;
+    public static LevelLoader Instance { get; private set; }
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        InizializeSingleton();
+    }
+    private void InizializeSingleton()
+    {
+        if (Instance == null) Instance = this; 
+        else Destroy(gameObject);   
     }
     public void LoadLevel(string levelName , string spawnName)
-    {
-        Debug.Log("--- INIZIO PROCEDURA CAMBIO SCENA ---");
-        
-        if (SaveManager.Instance != null) 
-        {
-            SaveManager.Instance.PerformSave();
-            Debug.Log("--- SALVATAGGIO COMPLETATO ---");
-        }
-        else
-        {
-            Debug.LogError("--- ERRORE: SaveManager.Instance è NULL! ---");
-        }
-
+    { 
+        if (string.IsNullOrEmpty(levelName)) return;
+        if (SaveManager.Instance != null) SaveManager.Instance.PerformSave();
         PositionManager.SetNextPosition(PositionManager.SpawnType.PORTAL, spawnName);
         SceneManager.LoadScene(levelName);
     }

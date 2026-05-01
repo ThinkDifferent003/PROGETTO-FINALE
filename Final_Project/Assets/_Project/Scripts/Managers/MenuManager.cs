@@ -5,23 +5,22 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    [Header("UI References")]
     [SerializeField] private GameObject _menuPanel;
     
-
     private bool _isPaused = false;
-
+    private void Start()
+    {
+        Time.timeScale = 1f;
+        if (_menuPanel != null) _menuPanel.SetActive(false);
+        _isPaused = false;
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (_isPaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            if (_isPaused) Resume();
+            else Pause();  
         }
     }
     public void Pause()
@@ -39,17 +38,20 @@ public class MenuManager : MonoBehaviour
 
     public void SaveGame()
     {
-        SaveManager.Instance.PerformSave();
+        if (SaveManager.Instance != null) SaveManager.Instance.PerformSave();
         Debug.Log("Gioco salvato");
     }
     public void QuitGame()
     {
+        Time.timeScale = 1f;
+        _isPaused = false;
         SceneManager.LoadScene("MainMenu");
     }
     public void SaveAndQuit()
     {
-        SaveManager.Instance.PerformSave();
-        SceneManager.LoadScene("MainMenu");
+        Resume();
+        SaveGame();
+        QuitGame();
     }
     
 }

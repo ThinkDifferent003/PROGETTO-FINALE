@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class EndGameTrigger : MonoBehaviour
 {
+    [Header("EndGame References")]
     [SerializeField] private IntroManager _endGame;
+
     private bool _hasTriggered = false;
 
     private void OnTriggerEnter(Collider other)
