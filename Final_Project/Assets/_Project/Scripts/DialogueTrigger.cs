@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class DialogueTrigger : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] private bool _isOneShot = true;
     
     [SerializeField] private NavMeshAgent _enemyAgent;
+    [SerializeField] private UnityEvent _onDialogueEnd;
     private bool _hasPlayed = false;
     private bool _playerInRange = false;
 
@@ -89,17 +91,33 @@ public class DialogueTrigger : MonoBehaviour
         {
             ai = _enemyAgent.GetComponent<EnemyAI>();
             if (ai != null) ai.enabled = false;
+            _enemyAgent.isStopped = true;
         }
         yield return StartCoroutine(DialogueManager.Instance.PlayDialogue(_inkJson, _namePG.Name));
-        if (player != null) player.enabled = true;
-        if (ai != null) ai.enabled = true;
+        if (_onDialogueEnd  != null) _onDialogueEnd.Invoke();
+        if (_onDialogueEnd.GetPersistentEventCount() == 0)
+        {
+            if (player != null) player.enabled = true;
+            if (_enemyAgent != null) _enemyAgent.isStopped = false;
+            if (ai != null) ai.enabled = true;
+        }
+        
+        
+
         if (_isOneShot)
         {
-            Destroy(gameObject);
+            if (_onDialogueEnd.GetPersistentEventCount() == 0) Destroy(gameObject);
+            else
+            {
+                this.enabled = false;
+                Collider col = GetComponent<Collider>();
+                if (col != null) col.enabled = false;
+            }
         }
         else
         {
             _hasPlayed = false;
         }
+        
     }
 }

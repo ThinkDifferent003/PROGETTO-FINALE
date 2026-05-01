@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Boss
   m_EditorClassIdentifier: 
   _name: Orgre
-  _maxHealth: 60
+  _maxHealth: 5
   _attack: 10

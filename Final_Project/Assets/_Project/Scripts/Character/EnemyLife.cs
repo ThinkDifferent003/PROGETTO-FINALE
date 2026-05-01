@@ -6,12 +6,14 @@ public class EnemyLife : LifeManager
 {
     private EnemyAnimation _enemyAnimation;
     private EnemyAI _enemyController;
+    private LootDrop _lootDrop;
 
     protected override void Awake()
     {
         base.Awake();
         _enemyAnimation = GetComponentInChildren<EnemyAnimation>();
         _enemyController = GetComponent<EnemyAI>();
+        _lootDrop = GetComponent<LootDrop>();
     }
     public override void TakeDamage(int damage,Vector3 attacker)
     {
@@ -29,6 +31,7 @@ public class EnemyLife : LifeManager
         {
             enemyAI.enabled = false;
         }
+        if (_lootDrop != null) _lootDrop.DropItem();
 
         if (_enemyAnimation != null)
         {

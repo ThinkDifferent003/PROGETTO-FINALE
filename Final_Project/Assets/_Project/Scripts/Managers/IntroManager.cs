@@ -13,6 +13,7 @@ public class IntroManager : MonoBehaviour
     [SerializeField] private float _typingSpeed = 0.1f;
     [SerializeField] private Animator _animator;
     [SerializeField] private GameObject _gameManagerPref;
+    [SerializeField] private string _sceneToLoad = "Level1";
 
     private int _typingCount = 0;
     private bool _isTyping = false;
@@ -80,8 +81,12 @@ public class IntroManager : MonoBehaviour
         _text.text = "";
         
         yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene("Level1");
-        GameObject manager = Instantiate(_gameManagerPref);
-        DontDestroyOnLoad(manager);
+        SceneManager.LoadScene(_sceneToLoad);
+        if (_sceneToLoad == "Level1")
+        {
+            GameObject manager = Instantiate(_gameManagerPref);
+            DontDestroyOnLoad(manager);
+        }
+        
     }
 }
