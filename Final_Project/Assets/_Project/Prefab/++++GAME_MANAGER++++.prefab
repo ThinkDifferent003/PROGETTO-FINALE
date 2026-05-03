@@ -1074,8 +1074,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _object: {fileID: 11400000, guid: 1925220b0ca21fe4aad96c0e28625a03, type: 2}
-  _imageIcon: {fileID: 4335257774635183989}
   _keyCode: 0
+  _imageIcon: {fileID: 4335257774635183989}
   _iconObject: {fileID: 8999739114163554461}
   _quantityText: {fileID: 5261126067632338604}
   _keyUseItem: {fileID: 0}
@@ -2283,8 +2283,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _object: {fileID: 11400000, guid: 609e98c1224b8074093f83127964552a, type: 2}
-  _imageIcon: {fileID: 4865345984082614647}
   _keyCode: 113
+  _imageIcon: {fileID: 4865345984082614647}
   _iconObject: {fileID: 6801524531873167209}
   _quantityText: {fileID: 630489317129370414}
   _keyUseItem: {fileID: 2455532530523677548}
@@ -3779,6 +3779,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5477188999278764182}
     m_Modifications:
+    - target: {fileID: 4196545883747439704, guid: 1d92cb26f75745d43bb06bdbfca8b02a, type: 3}
+      propertyPath: _moveSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5215949292030787525, guid: 1d92cb26f75745d43bb06bdbfca8b02a, type: 3}
       propertyPath: m_Name
       value: Player

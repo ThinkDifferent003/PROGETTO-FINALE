@@ -11,24 +11,38 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
 
     [Header("Music tracks")]
+    [SerializeField] private AudioClip _menuClip;
     [SerializeField] private AudioClip _mainClip;
     [SerializeField] private AudioClip _bossClip;
 
     [Header("Settings")]
     [SerializeField] private float _fade = 1.5f;
+    [SerializeField] private float _volume = 1f;
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+    private void OnEnable()
+    {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     private void OnSceneLoaded(Scene scene , LoadSceneMode mode)
     {
-        if (scene.name == "Level3") PlayMusic(_bossClip);
+        if (scene.name == "MainMenu") PlayMusic(_menuClip);
+        else if (scene.name == "Level3") PlayMusic(_bossClip);
         else PlayMusic(_mainClip);   
     }
     public void PlayMusic(AudioClip clip)
@@ -40,20 +54,19 @@ public class AudioManager : MonoBehaviour
     }
     private IEnumerator FadeMusic(AudioClip clip)
     {
-        float startVolume = _audioSource.volume;
         while (_audioSource.volume > 0)
         {
-            _audioSource.volume -= startVolume * Time.deltaTime / (_fade / 2);
+            _audioSource.volume -= Time.deltaTime / (_fade / 2);
             yield return null;
         }
         _audioSource.Stop();
         _audioSource.clip = clip;
         _audioSource.Play();
-        while (_audioSource.volume < startVolume)
+        while (_audioSource.volume < _volume)
         {
-            _audioSource.volume += startVolume + Time.deltaTime / (_fade / 2);
+            _audioSource.volume += Time.deltaTime / (_fade / 2);
             yield return null;
         }
-        _audioSource.volume = startVolume;
+        _audioSource.volume = _volume;
     }
 }

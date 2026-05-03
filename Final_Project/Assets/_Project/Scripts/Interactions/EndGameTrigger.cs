@@ -6,6 +6,7 @@ public class EndGameTrigger : MonoBehaviour
 {
     [Header("EndGame References")]
     [SerializeField] private IntroManager _endGame;
+    [SerializeField] private GameObject _endPanel;
 
     private bool _hasTriggered = false;
 
@@ -16,6 +17,7 @@ public class EndGameTrigger : MonoBehaviour
             if (_endGame != null)
             {
                 _hasTriggered = true;
+                if (_endPanel != null) _endPanel.SetActive(true);
                 _endGame.StartIntro();
             }
         }

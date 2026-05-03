@@ -312,14 +312,13 @@ MonoBehaviour:
   _currentState: 0
   _circleRange: 1
   _attackRange: 0.5
-  _moveSpeed: 2
+  _detectionRange: 1
+  _moveSpeed: 1.5
   _attackCooldown: 0.6
   _aggressionTime: 5
   _patienceTime: 0.3
-  _detectionRange: 1
   _forceRecoil: 2.5
   _durationRecoil: 0.2
-  _timerRecoil: 0
 --- !u!195 &3369116285882081828
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -422,4 +421,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaf5242b4c061894da54ba1d31f66dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stats: {fileID: 11400000, guid: 695db4ffcf1c80143bbee4785ea00f8a, type: 2}
+  _stats: {fileID: 11400000, guid: 382969da86bf7004f80447778c53841e, type: 2}
